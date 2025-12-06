@@ -9,32 +9,74 @@ const InvoiceForm = ({
     onAddItem,
     onUpdateItem,
     onRemoveItem,
-    onTaxChange
+    onTaxChange,
+    onCompanyChange,
+    isPdfMode
 }) => {
+    const handleCompanyEdit = (e) => {
+        const { name, value } = e.target;
+        onCompanyChange(name, value);
+    };
     return (
         <div className="bg-white p-8 md:p-12 shadow-2xl rounded-xl max-w-4xl mx-auto min-h-[1000px] flex flex-col relative overflow-hidden ring-1 ring-gray-100">
             {/* Decorative top bar */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-
             <header className="flex justify-between items-start mb-12 mt-4">
                 <div>
                     <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight">INVOICE</h1>
                     <p className="text-gray-500 mt-1"># {data.clientDetails.invoiceNumber || '001'}</p>
                 </div>
-                <div className="text-right">
-                    {/* Placeholder Logo */}
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 font-bold mb-2 ml-auto">
-                        LOGO
+                <div className="text-right w-1/3">
+                    {/* Logo with fixed dimensions wrapper */}
+                    <div style={{ width: '64px', height: '64px', marginLeft: 'auto', marginBottom: '8px' }}>
+                        <img
+                            src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/40/e3/d2/40e3d228-6afc-8b8f-29d0-dc5a6332e428/AppIcon-0-0-1x_U007ephone-0-1-85-220.png/1200x630wa.png"
+                            className="w-full h-full rounded-lg object-cover"
+                            alt="Logo"
+                        />
                     </div>
-                    <p className="font-semibold text-gray-800">Your Company Name</p>
-                    <p className="text-gray-500 text-sm">123 Business St.</p>
-                    <p className="text-gray-500 text-sm">City, State, 12345</p>
+
+                    {isPdfMode ? (
+                        <>
+                            <div className="text-right font-semibold text-gray-800 font-sans">{data.companyDetails.name}</div>
+                            <div className="text-right text-gray-500 text-sm font-sans whitespace-pre-wrap">{data.companyDetails.address}</div>
+                            <div className="text-right text-gray-500 text-sm font-sans">{data.companyDetails.cityStateZip}</div>
+                        </>
+                    ) : (
+                        <>
+                            <input
+                                type="text"
+                                name="name"
+                                value={data.companyDetails.name}
+                                onChange={handleCompanyEdit}
+                                placeholder="Your Company Name"
+                                className="w-full text-right font-semibold text-gray-800 bg-transparent h-auto leading-tight focus:outline-none focus:ring-1 focus:ring-indigo-500 rounded px-1 placeholder-gray-400 font-sans"
+                            />
+                            <textarea
+                                name="address"
+                                value={data.companyDetails.address}
+                                onChange={handleCompanyEdit}
+                                placeholder="Company Address"
+                                rows="2"
+                                className="w-full text-right text-gray-500 text-sm bg-transparent h-auto leading-tight focus:outline-none focus:ring-1 focus:ring-indigo-500 rounded px-1 placeholder-gray-300 resize-none font-sans"
+                            />
+                            <input
+                                type="text"
+                                name="cityStateZip"
+                                value={data.companyDetails.cityStateZip}
+                                onChange={handleCompanyEdit}
+                                placeholder="City, State, Zip"
+                                className="w-full text-right text-gray-500 text-sm bg-transparent h-auto leading-tight focus:outline-none focus:ring-1 focus:ring-indigo-500 rounded px-1 placeholder-gray-300 font-sans"
+                            />
+                        </>
+                    )}
                 </div>
             </header>
 
             <ClientDetails
                 details={data.clientDetails}
                 onChange={onClientChange}
+                isPdfMode={isPdfMode}
             />
 
             <LineItemTable
@@ -42,12 +84,14 @@ const InvoiceForm = ({
                 addItem={onAddItem}
                 updateItem={onUpdateItem}
                 removeItem={onRemoveItem}
+                isPdfMode={isPdfMode}
             />
 
             <TotalsSummary
                 items={data.items}
                 taxRate={data.taxRate}
                 onTaxChange={onTaxChange}
+                isPdfMode={isPdfMode}
             />
 
             <div className="mt-auto pt-12 text-gray-500 text-sm">

@@ -5,6 +5,12 @@ import PDFExportButton from './components/PDFExportButton';
 const App = () => {
   const invoiceRef = useRef(null);
 
+  const [companyDetails, setCompanyDetails] = useState({
+    name: 'Your Company Name',
+    address: '123 Business St.',
+    cityStateZip: 'City, State, 12345',
+  });
+
   const [clientDetails, setClientDetails] = useState({
     clientName: 'Acme Corp',
     clientAddress: '123 Innovation Dr.\nTech City, CA 94000',
@@ -22,6 +28,10 @@ const App = () => {
 
   const handleClientChange = (name, value) => {
     setClientDetails(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCompanyChange = (name, value) => {
+    setCompanyDetails(prev => ({ ...prev, [name]: value }));
   };
 
   const handleAddItem = () => {
@@ -43,6 +53,8 @@ const App = () => {
     });
   };
 
+  const [isPdfMode, setIsPdfMode] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans text-gray-900">
 
@@ -53,7 +65,11 @@ const App = () => {
           <p className="text-gray-500">Create, customize, and download your invoice.</p>
         </div>
         <div>
-          <PDFExportButton targetRef={invoiceRef} fileName={`Invoice-${clientDetails.invoiceNumber}.pdf`} />
+          <PDFExportButton
+            targetRef={invoiceRef}
+            fileName={`Invoice-${clientDetails.invoiceNumber}.pdf`}
+            onPdfModeChange={setIsPdfMode}
+          />
         </div>
       </div>
 
@@ -61,8 +77,10 @@ const App = () => {
       <div className="max-w-[210mm] mx-auto transition-transform hover:scale-[1.01] duration-300 ease-in-out">
         <div ref={invoiceRef}>
           <InvoiceForm
-            data={{ clientDetails, items, taxRate }}
+            data={{ clientDetails, items, taxRate, companyDetails }}
+            isPdfMode={isPdfMode}
             onClientChange={handleClientChange}
+            onCompanyChange={handleCompanyChange}
             onAddItem={handleAddItem}
             onUpdateItem={handleUpdateItem}
             onRemoveItem={handleRemoveItem}

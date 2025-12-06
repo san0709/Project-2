@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const PDFExportButton = ({ targetRef, fileName }) => {
+const PDFExportButton = ({ targetRef, fileName, onPdfModeChange }) => {
     const [loading, setLoading] = useState(false);
 
     const handleExport = async () => {
@@ -10,6 +10,13 @@ const PDFExportButton = ({ targetRef, fileName }) => {
         setLoading(true);
 
         try {
+            // Enable PDF View Mode (Text only, no inputs)
+            if (onPdfModeChange) {
+                onPdfModeChange(true);
+                // Wait for React to render the changes
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
             const element = targetRef.current;
             const canvas = await html2canvas(element, {
                 scale: 2,
@@ -35,7 +42,6 @@ const PDFExportButton = ({ targetRef, fileName }) => {
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
 
-            // Multi-page support if needed (simple version)
             while (heightLeft >= 0) {
                 position = heightLeft - imgHeight;
                 pdf.addPage();
@@ -48,6 +54,10 @@ const PDFExportButton = ({ targetRef, fileName }) => {
             console.error('Error generating PDF:', error);
             alert('Failed to generate PDF. Check console for details.');
         } finally {
+            // Revert to Edit Mode
+            if (onPdfModeChange) {
+                onPdfModeChange(false);
+            }
             setLoading(false);
         }
     };

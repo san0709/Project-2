@@ -26,14 +26,22 @@ const InvoiceForm = ({
                     <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight">INVOICE</h1>
                     <p className="text-gray-500 mt-1"># {data.clientDetails.invoiceNumber || '001'}</p>
                 </div>
-                <div className="text-right w-1/3">
-                    {/* Logo with fixed dimensions wrapper */}
-                    <div style={{ width: '64px', height: '64px', marginLeft: 'auto', marginBottom: '8px' }}>
-                        <img
-                            src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/40/e3/d2/40e3d228-6afc-8b8f-29d0-dc5a6332e428/AppIcon-0-0-1x_U007ephone-0-1-85-220.png/1200x630wa.png"
-                            className="w-full h-full rounded-lg object-cover"
-                            alt="Logo"
-                        />
+                <div className="text-right w-1/3 text-right">
+                    {/* CSS-based Logo for perfect vector quality - Explicit centering */}
+                    <div
+                        className="ml-auto mb-2 rounded-2xl bg-indigo-600 text-white shadow-md select-none"
+                        style={{
+                            width: '64px',
+                            height: '64px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center' // Explicitly override parent's text-right
+                        }}
+                    >
+                        <div style={{ fontSize: '10px', fontWeight: '800', lineHeight: '1', width: '100%' }}>INVOICE</div>
+                        <div style={{ fontSize: '10px', fontWeight: '800', lineHeight: '1', width: '100%', marginTop: '2px' }}>MAKER</div>
                     </div>
 
                     {isPdfMode ? (

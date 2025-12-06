@@ -105,7 +105,7 @@ const InvoiceForm = ({
             <div className="mt-auto pt-12 text-gray-500 text-sm">
                 <h4 className="font-semibold text-gray-700 mb-2">Notes</h4>
                 <textarea
-                    placeholder="Thank you for your business! Payment is due within 30 days."
+                    placeholder="Enter your notes here!!!"
                     className="w-full bg-transparent border-none resize-none focus:ring-0 text-gray-500 p-0"
                     rows="2"
                 />
